@@ -1,10 +1,14 @@
 using UnityEngine;
 
+// Stamina and HP still not implemented
 public class ClimberEntity : Entity {
     public float climbSpeed = 3f;
 
     private bool canClimb = false;
     private bool isClimbing = false;
+
+    private bool isGeneratingRandomNextClimbStep = false;
+    private ClimbStep? nextClimbStep = null;
 
     public void StartClimb() {
         if(!canClimb) return;
@@ -12,6 +16,7 @@ public class ClimberEntity : Entity {
         isClimbing = true;
         rb.gravityScale = 0f;
         rb.velocity = Vector2.zero;
+        StartGeneratingRandomNextClimbStep();
     }
 
     public void StopClimb() {
@@ -19,6 +24,38 @@ public class ClimberEntity : Entity {
         
         isClimbing = false;
         rb.gravityScale = 1f;
+        StopGeneratingRandomNextClimbStep();
+    }
+
+    public ClimbStep GetNextClimbStep() {
+        return nextClimbStep;
+    }
+
+    public ClimbStep VerifyNextClimbStep(ClimbStep inputedClimbStep) {
+        // Stamina logic and etc
+    }
+
+    private async void StartGeneratingRandomNextClimbStep(int minDelay = 1000, int maxDelay = 3000) {
+        isGeneratingRandomNextClimbStep = true;
+        while(isGeneratingRandomNextClimbStep) {
+            int delay = UnityEngine.Random.Range(minDelay, maxDelay);
+            await Task.Delay(delay, token);
+            if (!isGeneratingRandomNextClimbStep) return;
+
+            nextClimbStep = GenerateRandomNextClimbStep()
+        }
+    }
+
+    private void StopGeneratingRandomNextClimbStep() {
+        isGeneratingRandomNextClimbStep = false;
+    }
+
+    public ClimbStep GenerateRandomNextClimbStep() {
+        Array enumValues = Enum.GetValues(typeof(ClimbStep));
+        
+        ClimbStep randomStep = (ClimbStep)enumValues.GetValue(UnityEngine.Random.Range(0, enumValues.Length));
+        
+        return randomStep;
     }
 
     /// <summary>
@@ -41,7 +78,7 @@ public class ClimberEntity : Entity {
     }
 
     protected override void OnCollisionExit2D(Collision2D collision) {
-        base.OnCollisionExit2D(collision); // Keep ground detection
+        base.OnCollisionExit2D(collision);
 
         const bool isCollisionClimbable = collision.gameObject.CompareTag("Climbable"); 
         if (isCollisionClimbable) {
