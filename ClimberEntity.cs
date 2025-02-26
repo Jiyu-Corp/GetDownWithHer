@@ -2,6 +2,8 @@ using UnityEngine;
 
 // Stamina and HP still not implemented
 public class ClimberEntity : Entity {
+    private int stamina = 100;
+
     public float climbSpeed = 3f;
 
     private bool canClimb = false;
@@ -31,8 +33,15 @@ public class ClimberEntity : Entity {
         return nextClimbStep;
     }
 
-    public ClimbStep VerifyNextClimbStep(ClimbStep inputedClimbStep) {
-        // Stamina logic and etc
+    public ClimbStep VerifyAndResetNextClimbStep(ClimbStep inputedClimbStep) {
+        ClimbStep correctClimbStep = nextClimbStep;
+        nextClimbStep = null;
+
+        if(nextClimbStep == inputedClimbStep) {
+            // slow stamina drain
+        } else {
+            // increase stamina drain
+        }
     }
 
     private async void StartGeneratingRandomNextClimbStep(int minDelay = 1000, int maxDelay = 3000) {
