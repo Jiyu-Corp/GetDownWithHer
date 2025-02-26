@@ -1,8 +1,9 @@
 using UnityEngine;
 
-// Stamina and HP still not implemented
 public class ClimberEntity : Entity {
     private int stamina = 100;
+    private bool isStaminaDraining = false;
+    private int staminaDrainScale = 0;
 
     public float climbSpeed = 3f;
 
@@ -12,6 +13,21 @@ public class ClimberEntity : Entity {
     private bool isGeneratingRandomNextClimbStep = false;
     private ClimbStep? nextClimbStep = null;
 
+    protected async void Start() {
+        StartAutoStaminaRegenPerSecond();
+    }
+
+    private async void StartAutoStaminaRegenPerSecond() {
+        while(true) {
+            if(isStaminaDraining) continue;
+
+            int delay = 1 * 1000;
+            await Task.Delay(delay);
+            
+            stamina++;
+        }
+    }
+
     public void StartClimb() {
         if(!canClimb) return;
 
@@ -19,6 +35,7 @@ public class ClimberEntity : Entity {
         rb.gravityScale = 0f;
         rb.velocity = Vector2.zero;
         StartGeneratingRandomNextClimbStep();
+        StartStaminaDrainPerSecond();
     }
 
     public void StopClimb() {
@@ -27,6 +44,7 @@ public class ClimberEntity : Entity {
         isClimbing = false;
         rb.gravityScale = 1f;
         StopGeneratingRandomNextClimbStep();
+        StopStaminaDrainPerSecond();
     }
 
     public ClimbStep GetNextClimbStep() {
@@ -38,17 +56,19 @@ public class ClimberEntity : Entity {
         nextClimbStep = null;
 
         if(nextClimbStep == inputedClimbStep) {
-            // slow stamina drain
+            staminaDrainScale--;
         } else {
-            // increase stamina drain
+            staminaDrainScale*=2;
         }
+
+        if(stamina <= 0) StopClimb();
     }
 
     private async void StartGeneratingRandomNextClimbStep(int minDelay = 1000, int maxDelay = 3000) {
         isGeneratingRandomNextClimbStep = true;
         while(isGeneratingRandomNextClimbStep) {
             int delay = UnityEngine.Random.Range(minDelay, maxDelay);
-            await Task.Delay(delay, token);
+            await Task.Delay(delay);
             if (!isGeneratingRandomNextClimbStep) return;
 
             nextClimbStep = GenerateRandomNextClimbStep()
@@ -59,12 +79,27 @@ public class ClimberEntity : Entity {
         isGeneratingRandomNextClimbStep = false;
     }
 
-    public ClimbStep GenerateRandomNextClimbStep() {
+    private ClimbStep GenerateRandomNextClimbStep() {
         Array enumValues = Enum.GetValues(typeof(ClimbStep));
         
         ClimbStep randomStep = (ClimbStep)enumValues.GetValue(UnityEngine.Random.Range(0, enumValues.Length));
         
         return randomStep;
+    }
+
+    private async void StartStaminaDrainPerSecond() {
+        isStaminaDraining = true;
+        while(isStaminaDraining) {
+            int delay = 1 * 1000;
+            await Task.Delay(delay);
+            
+            staminaDrainScale++;
+            stamina = stamina - staminaDrainScale;
+        }
+    }
+
+    private void StopStaminaDrainPerSecond() {
+        isStaminaDraining = false;
     }
 
     /// <summary>

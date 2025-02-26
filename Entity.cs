@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// HP still not implemented
 public class Entity : MonoBehaviour {
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
