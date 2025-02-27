@@ -1,5 +1,8 @@
 using UnityEngine;
 
+using System;
+using System.Threading.Tasks;
+
 public class ClimberEntity : Entity {
     private int stamina = 100;
     private bool isStaminaDraining = false;
@@ -14,10 +17,10 @@ public class ClimberEntity : Entity {
     private ClimbStep? nextClimbStep = null;
 
     protected async void Start() {
-        StartAutoStaminaRegenPerSecond();
+        await StartAutoStaminaRegenPerSecond();
     }
 
-    private async void StartAutoStaminaRegenPerSecond() {
+    private async Task StartAutoStaminaRegenPerSecond() {
         while(true) {
             if(isStaminaDraining) continue;
 
@@ -33,7 +36,7 @@ public class ClimberEntity : Entity {
 
         isClimbing = true;
         rb.gravityScale = 0f;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         StartGeneratingRandomNextClimbStep();
         StartStaminaDrainPerSecond();
     }
@@ -47,21 +50,25 @@ public class ClimberEntity : Entity {
         StopStaminaDrainPerSecond();
     }
 
-    public ClimbStep GetNextClimbStep() {
+    public ClimbStep? GetNextClimbStep() {
         return nextClimbStep;
     }
 
-    public ClimbStep VerifyAndResetNextClimbStep(ClimbStep inputedClimbStep) {
-        ClimbStep correctClimbStep = nextClimbStep;
-        nextClimbStep = null;
+    public ClimbStep? VerifyAndResetNextClimbStep(ClimbStep inputedClimbStep) {
+        ClimbStep? correctClimbStep = nextClimbStep;
+        if(correctClimbStep == null) return null;
 
-        if(nextClimbStep == inputedClimbStep) {
+        if(correctClimbStep == inputedClimbStep) {
             staminaDrainScale--;
         } else {
             staminaDrainScale*=2;
         }
 
         if(stamina <= 0) StopClimb();
+
+        nextClimbStep = null;
+
+        return correctClimbStep;
     }
 
     private async void StartGeneratingRandomNextClimbStep(int minDelay = 1000, int maxDelay = 3000) {
@@ -71,7 +78,7 @@ public class ClimberEntity : Entity {
             await Task.Delay(delay);
             if (!isGeneratingRandomNextClimbStep) return;
 
-            nextClimbStep = GenerateRandomNextClimbStep()
+            nextClimbStep = GenerateRandomNextClimbStep();
         }
     }
 
@@ -109,13 +116,13 @@ public class ClimberEntity : Entity {
     public void Climb(float verticalDirection) {
         if(!isClimbing) return;
 
-        rb.velocity = new Vector2(rb.velocity.x, verticalDirection * climbSpeed); 
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, verticalDirection * climbSpeed); 
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision) {
         base.OnCollisionEnter2D(collision);
 
-        const bool isCollisionClimbable = collision.gameObject.CompareTag("Climbable"); 
+        bool isCollisionClimbable = collision.gameObject.CompareTag("Climbable"); 
         if (isCollisionClimbable) {
             canClimb = true;
         }
@@ -124,7 +131,7 @@ public class ClimberEntity : Entity {
     protected override void OnCollisionExit2D(Collision2D collision) {
         base.OnCollisionExit2D(collision);
 
-        const bool isCollisionClimbable = collision.gameObject.CompareTag("Climbable"); 
+        bool isCollisionClimbable = collision.gameObject.CompareTag("Climbable"); 
         if (isCollisionClimbable) {
             canClimb = false;
         }
