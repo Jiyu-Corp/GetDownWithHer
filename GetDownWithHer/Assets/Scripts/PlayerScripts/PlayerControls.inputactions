@@ -22,15 +22,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Climb",
-                    "type": "Value",
-                    "id": "8ab808f0-969f-4dc7-87f5-49f4f9698517",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -46,7 +37,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Vertical",
+                    "name": "Horizontal",
                     "id": "e8cfc283-d3eb-4d15-a512-cc8761d9dc1b",
                     "path": "2DVector",
                     "interactions": "",
@@ -75,39 +66,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Horizontal",
-                    "id": "bdbc8139-a6df-4a46-b199-1a182abcd8a6",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Climb",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "fc2f6729-5aa6-4006-9d0f-5e1ba9e45299",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Climb",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "00f4467e-1ae9-4c9b-927d-9503fc3b2e86",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Climb",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

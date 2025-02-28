@@ -1,4 +1,4 @@
-/* using UnityEngine;
+using UnityEngine;
 
 using System;
 using System.Threading.Tasks;
@@ -137,4 +137,4 @@ public class ClimberEntity : Entity {
         }
     }
 
-} */
+}
