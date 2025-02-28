@@ -9,17 +9,36 @@ public class Entity : MonoBehaviour {
     protected Rigidbody2D rb;
     protected bool inGround = false;
 
+    private float movingDirection = 0f;
+
     protected virtual void Awake() {
         rb = GetComponent<Rigidbody2D>();
     }
 
+    protected void FixedUpdate() {
+        MoveEntity();
+    }
+
+    private void MoveEntity() {
+        if (movingDirection != 0f && inGround) {
+            rb.linearVelocity = new Vector2(Mathf.MoveTowards(rb.linearVelocity.x, movingDirection * 14, 20 * Time.fixedDeltaTime), rb.linearVelocity.y);
+            //rb.linearVelocity = new Vector2(movingDirection * moveSpeed, rb.linearVelocity.y);   
+        }
+    }
+
     /// <summary>
-    /// Moves the Entity horizontally if on ground
+    /// Begin the movement of Entity in X axis
     /// </summary>
     /// <param name="horizontalDirection">Value between -1 and 1.</param>
-    public virtual void Move(float horizontalDirection) {
+    public virtual void BeginMove(float horizontalDirection) {
         if(inGround) {
-            rb.linearVelocity = new Vector2(horizontalDirection * moveSpeed, rb.linearVelocity.y);    
+            movingDirection = horizontalDirection;
+        }
+    }
+
+    public virtual void StopMove() {
+        if(inGround) {
+            movingDirection = 0f;
         }
     }
 

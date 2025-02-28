@@ -24,6 +24,7 @@ public class PlayerInputController : MonoBehaviour {
 
     private void BindHandlersToActions() {
         jumpAction.performed += ctx => climberEntity.Jump();
-        moveAction.performed += ctx => climberEntity.Move(ctx.ReadValue<Vector2>().x);
+        moveAction.started += ctx => climberEntity.BeginMove(ctx.ReadValue<Vector2>().x);
+        moveAction.canceled += ctx => climberEntity.StopMove();
     } 
 }
