@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 
 // HP still not implemented
 public class Entity : MonoBehaviour {
@@ -46,4 +46,4 @@ private void private void OnCollisionExit2D(Collision2D collision) {
     if (isGroundCollision) {
         inGround = false;
     }
-}
+} */

@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 
 public class ClimberEntity : Entity {
     private int stamina = 100;
@@ -130,4 +130,4 @@ public class ClimberEntity : Entity {
         }
     }
 
-}
+} */
