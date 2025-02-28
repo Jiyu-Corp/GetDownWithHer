@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 
 // HP still not implemented
 public class Entity : MonoBehaviour {
@@ -46,4 +46,4 @@ public class Entity : MonoBehaviour {
             inGround = false;
         }
     }
-}
+} */
