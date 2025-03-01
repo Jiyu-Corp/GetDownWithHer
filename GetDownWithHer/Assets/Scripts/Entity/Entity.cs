@@ -1,45 +1,113 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 // HP still not implemented
 public class Entity : MonoBehaviour {
     [Header("Movement Settings")]
-    public float moveSpeed = 5f;
+    public float acceleration = 24;
+    public float moveSpeed = 7f;
+    public float boastedMoveSpeed = 14f;
+    public float timeUntilReachBoastedSpeed = 2f;
     public float jumpForce = 7f;
 
     protected Rigidbody2D rb;
-    protected bool inGround = false;
 
+    // Terrain states
+    protected bool inGround = false;
+    protected bool inWall = false;
+
+    protected bool isMoving = false;
+    protected bool isBoastedMoving = false;
     private float movingDirection = 0f;
+    private float timeSinceStartMoving = 0f;
+
+    private Task cachedStartMove = null;
+    private Task cachedStopMove = null;
+
+    private Dictionary<Collider2D, Vector2> currentCollidingNormals = new Dictionary<Collider2D, Vector2>();
 
     protected virtual void Awake() {
         rb = GetComponent<Rigidbody2D>();
     }
 
     protected void FixedUpdate() {
-        MoveEntity();
-    }
+        if(isMoving && !inWall) {
+            isBoastedMoving = timeSinceStartMoving > timeUntilReachBoastedSpeed;
 
-    private void MoveEntity() {
-        if (movingDirection != 0f && inGround) {
-            rb.linearVelocity = new Vector2(Mathf.MoveTowards(rb.linearVelocity.x, movingDirection * 14, 20 * Time.fixedDeltaTime), rb.linearVelocity.y);
-            //rb.linearVelocity = new Vector2(movingDirection * moveSpeed, rb.linearVelocity.y);   
+            rb.linearVelocity = new Vector2(Mathf.MoveTowards(
+                rb.linearVelocity.x,
+                movingDirection * (isBoastedMoving ? boastedMoveSpeed : moveSpeed),
+                acceleration * Time.fixedDeltaTime
+            ), rb.linearVelocity.y);
+
+            timeSinceStartMoving += Time.deltaTime;
+        } else if (inWall) {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        } else {
+            timeSinceStartMoving = 0f;
+            isBoastedMoving = false;
+
+            rb.linearVelocity = new Vector2(Mathf.MoveTowards(
+                rb.linearVelocity.x,
+                0,
+                acceleration/3 * Time.fixedDeltaTime
+            ), rb.linearVelocity.y);
         }
     }
 
-    /// <summary>
-    /// Begin the movement of Entity in X axis
-    /// </summary>
-    /// <param name="horizontalDirection">Value between -1 and 1.</param>
-    public virtual void BeginMove(float horizontalDirection) {
+    public virtual void StartMove(float horizontalDirection) {
+        bool isStartMoveSetupSuccessful = SetupStartMove(horizontalDirection);
+        
+        if(!isStartMoveSetupSuccessful) {
+            if(cachedStopMove != null) cachedStopMove = null;
+            cachedStartMove = StartMoveAsync(horizontalDirection);
+        }
+    }
+    private bool SetupStartMove(float horizontalDirection) {
         if(inGround) {
+            isMoving = true;
             movingDirection = horizontalDirection;
         }
+
+        return inGround;
+    }
+    private Task StartMoveAsync(float horizontalDirection) {
+        return Task.Run(() => {
+            while(cachedStartMove != null) {
+                bool isStartMoveSetupSuccessful = SetupStartMove(horizontalDirection);
+                if(isStartMoveSetupSuccessful) cachedStartMove = null;
+
+                Task.Yield();
+            }
+        });
     }
 
-    public virtual void StopMove() {
-        if(inGround) {
+    public virtual void StopMove(bool verifyInGround = true) {
+        bool isStopMoveSetupSuccessful = SetupStopMove(verifyInGround);
+
+        if(!isStopMoveSetupSuccessful) {
+            if(cachedStartMove != null) cachedStartMove = null;
+            cachedStopMove = StopMoveAsync(verifyInGround);
+        }
+    }
+    private bool SetupStopMove(bool verifyInGround) {
+        if(!verifyInGround || inGround) {
+            isMoving = false;
             movingDirection = 0f;
         }
+
+        return !verifyInGround || inGround;
+    }
+    private Task StopMoveAsync(bool verifyInGround) {
+        return Task.Run(() => {
+            while(cachedStopMove != null) {
+                bool isStopMoveSetupSuccessful = SetupStopMove(verifyInGround);
+                if(isStopMoveSetupSuccessful) cachedStopMove = null;
+                Task.Yield();
+            }
+        });
     }
 
     /// <summary>
@@ -51,18 +119,36 @@ public class Entity : MonoBehaviour {
         }
     }
 
-    protected virtual void OnCollisionEnter2D(Collision2D collision) {
-        bool isGroundCollision = collision.gameObject.layer == LayerMask.NameToLayer("Ground"); // if Entity touch the colisor with head, it would make it possible to walk... FIX THAT
+    private void ValidateAndUpdateTerrainStates() {
+        float minYNormalForInGroundCheck = 0.3f;
+        float minXNormalForInWallCheck = 0.75f;
+        
+        bool isInGroundDetected = false;
+        bool isInWallDetected = false;
+        foreach(Vector2 normal in currentCollidingNormals.Values) {
+            if(!isInGroundDetected && normal.y >= minYNormalForInGroundCheck) {
+                isInGroundDetected = true;
+            }
 
-        if(isGroundCollision) {
-            inGround = true;
+            if(!isInWallDetected && Math.Abs(normal.x) >= minXNormalForInWallCheck) {
+                isInWallDetected = true;
+            }
         }
+
+        inGround = isInGroundDetected;
+        inWall = isInWallDetected;
+    }
+
+    protected virtual void OnCollisionEnter2D(Collision2D collision) {
+        foreach(ContactPoint2D contact in collision.contacts) {
+            currentCollidingNormals[contact.collider] = contact.normal;
+        }
+
+        ValidateAndUpdateTerrainStates();
     }
     protected virtual void OnCollisionExit2D(Collision2D collision) {
-        bool isGroundCollision = collision.gameObject.layer == LayerMask.NameToLayer("Ground");
+        currentCollidingNormals.Remove(collision.collider);
 
-        if (isGroundCollision) {
-            inGround = false;
-        }
+        ValidateAndUpdateTerrainStates();
     }
 }
