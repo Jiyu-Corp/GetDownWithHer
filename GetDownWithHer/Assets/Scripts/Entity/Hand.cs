@@ -10,6 +10,7 @@ public class Hand : MonoBehaviour {
     protected Rigidbody2D rb;
 
     void Start() {
+        rb = GetComponent<Rigidbody2D>();
         climberEntity = GetComponentInParent<ClimberEntity>();
     }
 
@@ -19,9 +20,9 @@ public class Hand : MonoBehaviour {
         // proper validate if Distance Joint will pull the binded object
 
         Vector2 direction = position - rb.position;
-        Vector2 velocityOfMovement = Vector2.MoveTowards(rb.velocity, direction.normalized * handSpeed, handSpeed * Time.deltaTime);
+        Vector2 velocityOfMovement = Vector2.MoveTowards(rb.linearVelocity, direction.normalized * handSpeed, handSpeed * Time.deltaTime);
 
-        rb.velocity = velocityOfMovement;
+        rb.linearVelocity = velocityOfMovement;
     }
 
     public void PrepareHold(bool enable) {

@@ -8,6 +8,7 @@ public class PlayerInputController : MonoBehaviour {
     // Actions
     private InputAction jumpAction;
     private InputAction moveAction;
+    private InputAction moveHandsAction;
 
     private void Awake() {
         playerInput = GetComponent<PlayerInput>();
@@ -20,11 +21,13 @@ public class PlayerInputController : MonoBehaviour {
     private void InitActions() {
         jumpAction = playerInput.actions["Jump"];
         moveAction = playerInput.actions["Move"];
+        moveHandsAction = playerInput.actions["MoveHands"];
     }
 
     private void BindHandlersToActions() {
         jumpAction.performed += ctx => climberEntity.Jump();
         moveAction.started += ctx => climberEntity.StartMove(ctx.ReadValue<Vector2>().x);
         moveAction.canceled += ctx => climberEntity.StopMove();
+        moveHandsAction.performed += ctx => climberEntity.MoveHands(ctx.ReadValue<Vector2>());
     } 
 }

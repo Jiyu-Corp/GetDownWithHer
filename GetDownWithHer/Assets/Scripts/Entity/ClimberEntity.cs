@@ -24,7 +24,7 @@ public class ClimberEntity : Entity {
         Physics2D.IgnoreCollision(lHandCollider, rHandCollider);
     }
 
-    public void MoveHands(Vector2D position) {
+    public void MoveHands(Vector2 position) {
         Hand lHandScript = lHand.GetComponent<Hand>();
         Hand rHandScript = rHand.GetComponent<Hand>();
 
