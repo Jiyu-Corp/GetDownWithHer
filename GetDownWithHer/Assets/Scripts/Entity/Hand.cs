@@ -1,28 +1,37 @@
 using UnityEngine;
 
 public class Hand : MonoBehaviour {
-    public float handSpeed = 5f;
+    public float handSpeed = 20f;
 
     private bool isHolding = false;
     private bool isPreparedToHold = false;
 
     private ClimberEntity climberEntity;
-    protected Rigidbody2D rb;
+    private Rigidbody2D rb;
+    private DistanceJoint2D dj;
 
     void Start() {
         rb = GetComponent<Rigidbody2D>();
         climberEntity = GetComponentInParent<ClimberEntity>();
+        dj = GetComponent<DistanceJoint2D>();
+    }
+
+    void FixedUpdate() {
+        Rigidbody2D rbCE = climberEntity.GetComponent<Rigidbody2D>();
+        rb.linearVelocity = rbCE.linearVelocity;
     }
 
     public void MoveHandToPosition(Vector2 position) {
-        if(isHolding) return;
+        return;
+        // if(isHolding) return;
 
-        // proper validate if Distance Joint will pull the binded object
+        // // proper validate if Distance Joint will pull the binded object
 
-        Vector2 direction = position - rb.position;
-        Vector2 velocityOfMovement = Vector2.MoveTowards(rb.linearVelocity, direction.normalized * handSpeed, handSpeed * Time.deltaTime);
+        // Vector2 direction = position - rb.position;
+        // Debug.Log(direction);
+        // Vector2 velocityOfMovement = Vector2.MoveTowards(rb.linearVelocity, direction.normalized * handSpeed, handSpeed * Time.deltaTime);
 
-        rb.linearVelocity = velocityOfMovement;
+        // rb.linearVelocity = velocityOfMovement;
     }
 
     public void PrepareHold(bool enable) {
