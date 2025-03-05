@@ -42,7 +42,7 @@ public class Entity : MonoBehaviour {
                 acceleration * Time.fixedDeltaTime
             ), rb.linearVelocity.y);
 
-            timeSinceStartMoving += Time.deltaTime;
+            timeSinceStartMoving += Time.fixedDeltaTime;
         } else if (inWall) {
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
         } else {

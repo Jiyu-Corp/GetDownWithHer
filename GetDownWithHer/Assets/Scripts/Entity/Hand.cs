@@ -12,6 +12,7 @@ public class Hand : MonoBehaviour {
     private Rigidbody2D rb;
     private DistanceJoint2D dj;
 
+    private float shoulderLimitDistance = 1f;
     private Vector2 directionPointer; // Where mouse is, maybe should be on another script? Maybe Climb?
 
     void Start() {
@@ -25,16 +26,28 @@ public class Hand : MonoBehaviour {
     }
 
     private void ApplySpeed() {
-        Vector2 speed = new Vector2(0,0);
-        if(!isHolding && IsOnShoulderLimitDistance()) { // the isHolding apply to both hands, in other words, it needs to be on the entity, just like this here we would know if the other hand is holding
-            // Works on directionPointer, mensurate its true module, they parse it removing the cos of the module
-        } else {
-            // just apply the direction pointer speed, cause it is holding or not on limit
-        }
+        Vector2 speed;
 
-        if(!isHolding) { //To make the hand follow the body, to avoid inertia to stop it
-            Rigidbody2D rbCE = climberEntity.GetComponent<Rigidbody2D>();
-            speed += rbCE.linearVelocity;
+        Vector2 speedTowardsPointer = Vector2.MoveTowards(rb.position, directionPointer, handSpeed * Time.deltaTime);
+
+        if(!isHolding) {
+            Rigidbody2D parentRB = climberEntity.GetComponent<Rigidbody2D>();
+            speed = parentRB.linearVelocity;
+
+            if(IsHandOnShoulderLimit()) {
+                Vector2 shoulderJointPoint = dj.connectedAnchor;
+                Vector2 vectorFromHandToShoulder = shoulderJointPoint - rb.position;
+                float distanceToShoulderLimit = vectorFromHandToShoulder.magnitude - shoulderLimitDistance;
+                Vector2 vectorToShoulderLimit = vectorFromHandToShoulder.normalized * distanceToShoulderLimit;
+                Vector2 pointOfShoulderLimit = rb.position + vectorToShoulderLimit;
+
+                Vector2 velocityToApproachLimit = Vector2.MoveTowards(rb.position, pointOfShoulderLimit, Mathf.Infinity * Time.fixedDeltaTime);
+                speed += velocityToApproachLimit;
+            } 
+            
+            speed += speedTowardsPointer;
+        } else {
+            speed = speedTowardsPointer;
         }
 
         rb.linearVelocity = speed;
