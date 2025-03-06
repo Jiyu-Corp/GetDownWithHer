@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Hand : MonoBehaviour {
-    public float handSpeed = 20f;
-
+    [HideInInspector]
     public bool isHolding = false;
+    
     private bool isPreparedToHold = false;
 
     private ClimberEntity climberEntity;
@@ -13,13 +13,15 @@ public class Hand : MonoBehaviour {
     private DistanceJoint2D dj;
     private Rigidbody2D parentRB;
 
-    private readonly float shoulderLimitDistance = 1f;
+    private float shoulderLimitDistance;
 
     void Start() {
         rb = GetComponent<Rigidbody2D>();
         climberEntity = GetComponentInParent<ClimberEntity>();
         dj = GetComponent<DistanceJoint2D>();
         parentRB = climberEntity.GetComponent<Rigidbody2D>();
+
+        shoulderLimitDistance = dj.distance;
 
         dj.enabled = false;
     }
@@ -33,9 +35,9 @@ public class Hand : MonoBehaviour {
         Vector2 handPositionInWorldSpace = new Vector2(rb.transform.position.x, rb.transform.position.y);
 
         Vector2 vectorTowardsPointer = climberEntity.directionPointer - handPositionInWorldSpace;
-        Vector2 speedTowardsPointer = (vectorTowardsPointer.magnitude > 0.05) ? vectorTowardsPointer.normalized * handSpeed : new Vector2(0,0);
+        Vector2 speedTowardsPointer = (vectorTowardsPointer.magnitude > 0.05) ? vectorTowardsPointer.normalized * climberEntity.handSpeed : new Vector2(0,0);
 
-        if(!isHolding) {
+        if(!climberEntity.isClimbing) {
             speed = parentRB.linearVelocity;
 
             speedTowardsPointer = AdjustSpeedToPointWithShoulderVirtualJoint(handPositionInWorldSpace, speedTowardsPointer);

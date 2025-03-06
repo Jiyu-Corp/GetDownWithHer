@@ -4,15 +4,21 @@ using System;
 using System.Threading.Tasks;
 
 public class ClimberEntity : Entity {
+    public readonly float handSpeed = 5f;
+
     private const int ID_L_HAND = 0;
     private const int ID_R_HAND = 1;
 
+    [HideInInspector]
     public Vector2 directionPointer;
 
     GameObject lHand;
     Hand lHandScript;
     GameObject rHand;
     Hand rHandScript;
+
+    [HideInInspector]
+    public bool isClimbing = false;
 
     void Start() {
         lHand = transform.Find("LeftHand").gameObject;
@@ -42,10 +48,10 @@ public class ClimberEntity : Entity {
         
         lHandScript.ManageJoint(enableHandsJoints);
         rHandScript.ManageJoint(enableHandsJoints);
+
+        isClimbing = enableHandsJoints;
     }
     public void ManageHoldHand(int idHand, bool enable) {
-        Debug.Log(idHand);
-        Debug.Log(enable);
         Hand handSelected = idHand == ID_L_HAND
             ?   lHandScript
             :   rHandScript;
