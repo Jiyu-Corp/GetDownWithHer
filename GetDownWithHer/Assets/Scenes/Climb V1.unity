@@ -562,9 +562,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1179967091355260541, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: handSpeed
+    - target: {fileID: 1404786630269264094, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
+      propertyPath: m_ActionEvents.Array.size
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1404786630269264094, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionId
+      value: 8c8f5fb2-b2d7-479c-897f-de929c4a0855
+      objectReference: {fileID: 0}
+    - target: {fileID: 1404786630269264094, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionId
+      value: 008aeb88-f55e-4de8-a849-0f0e29e51a7c
+      objectReference: {fileID: 0}
+    - target: {fileID: 1404786630269264094, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionName
+      value: 'Land/HoldHandL[/Mouse/leftButton]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1404786630269264094, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionName
+      value: 'Land/HoldHandR[/Mouse/rightButton]'
       objectReference: {fileID: 0}
     - target: {fileID: 1700433561148706243, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_Name
@@ -578,37 +594,25 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2732223057246565390, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_Enabled
-      value: 1
+    - target: {fileID: 2648806089508581307, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.004
+      objectReference: {fileID: 0}
+    - target: {fileID: 2648806089508581307, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.557
       objectReference: {fileID: 0}
     - target: {fileID: 2732223057246565390, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_Distance
-      value: 1.2
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 2732223057246565390, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: 0.18
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2732223057246565390, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_ConnectedAnchor.y
       value: 0.36
-      objectReference: {fileID: 0}
-    - target: {fileID: 3069765346690429820, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3069765346690429820, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_ConnectedAnchor.x
-      value: 0.23715779
-      objectReference: {fileID: 0}
-    - target: {fileID: 3069765346690429820, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_ConnectedAnchor.y
-      value: 0.34857783
-      objectReference: {fileID: 0}
-    - target: {fileID: 3360317029639432253, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: handSpeed
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3544729814356230245, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_Color.b
@@ -648,11 +652,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7544422313273570465, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_Distance
-      value: 1.2
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 7544422313273570465, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: 0.24
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: 7544422313273570465, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_ConnectedAnchor.y
@@ -700,11 +704,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8725446966875837852, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.245
+      value: 0.063
       objectReference: {fileID: 0}
     - target: {fileID: 8725446966875837852, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.343
+      value: -0.533
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

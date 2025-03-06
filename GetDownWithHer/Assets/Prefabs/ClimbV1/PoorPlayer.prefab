@@ -82,7 +82,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 96fccf5523e3c7047b722dcc704e3379, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -185,6 +185,7 @@ MonoBehaviour:
   timeUntilReachBoastedSpeed: 2
   jumpForce: 7
   directionPointer: {x: 0, y: 0}
+  isClimbing: 0
 --- !u!114 &1404786630269264094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,6 +223,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 72bccdd1-2121-4c9b-8b6e-7647fbd62f37
     m_ActionName: 'Land/MoveHands[/Mouse/position]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8c8f5fb2-b2d7-479c-897f-de929c4a0855
+    m_ActionName: 'Land/HoldHandL[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 008aeb88-f55e-4de8-a849-0f0e29e51a7c
+    m_ActionName: 'Land/HoldHandR[/Mouse/rightButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Land
@@ -257,7 +266,7 @@ GameObject:
   - component: {fileID: 7962999816653796963}
   - component: {fileID: 3069765346690429820}
   m_Layer: 0
-  m_Name: LeftHand
+  m_Name: RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -272,7 +281,7 @@ Transform:
   m_GameObject: {fileID: 2043589395982618700}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.168, y: -0.343, z: -0.027743962}
+  m_LocalPosition: {x: 0.004, y: -0.557, z: -0.027743962}
   m_LocalScale: {x: 0.3, y: 0.20000002, z: 0.24000001}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -321,9 +330,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.754717, g: 0.754717, b: 0.754717, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -412,9 +421,9 @@ DistanceJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 0
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.18, y: 0.32}
+  m_ConnectedAnchor: {x: 0, y: 0.36}
   m_AutoConfigureDistance: 0
-  m_Distance: 0.8
+  m_Distance: 1.1
   m_MaxDistanceOnly: 0
 --- !u!114 &3360317029639432253
 MonoBehaviour:
@@ -428,7 +437,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a33ca6cea0f9b4f91dc9be7841ee2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handSpeed: 3
   isHolding: 0
 --- !u!231 &7962999816653796963
 SpringJoint2D:
@@ -494,7 +502,7 @@ GameObject:
   - component: {fileID: 3522287812954587675}
   - component: {fileID: 3279638362718449046}
   m_Layer: 0
-  m_Name: RightHand
+  m_Name: LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -509,7 +517,7 @@ Transform:
   m_GameObject: {fileID: 4634415552944332640}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.168, y: -0.343, z: -0.027743962}
+  m_LocalPosition: {x: 0.063, y: -0.533, z: -0.027743962}
   m_LocalScale: {x: 0.3, y: 0.20000002, z: 0.24000001}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -560,7 +568,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.754717, g: 0.754717, b: 0.754717, a: 1}
+  m_Color: {r: 0.08334541, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -649,9 +657,9 @@ DistanceJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 0
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.22, y: 0.36}
+  m_ConnectedAnchor: {x: 0.06, y: 0.38}
   m_AutoConfigureDistance: 0
-  m_Distance: 0.8
+  m_Distance: 1.1
   m_MaxDistanceOnly: 0
 --- !u!114 &3855359677609255417
 MonoBehaviour:
@@ -665,7 +673,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a33ca6cea0f9b4f91dc9be7841ee2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handSpeed: 3
   isHolding: 0
 --- !u!231 &3522287812954587675
 SpringJoint2D:
