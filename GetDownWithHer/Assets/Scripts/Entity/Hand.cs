@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,6 +15,7 @@ public class Hand : MonoBehaviour {
     private DistanceJoint2D dj;
     private Rigidbody2D parentRB;
 
+    private List<Collision2D> currentCollisions = new();
     private float shoulderLimitDistance;
 
     void Start() {
@@ -28,6 +31,7 @@ public class Hand : MonoBehaviour {
 
     void FixedUpdate() {
         ApplySpeed();
+        HoldSurfaceIfCapable();
     }
 
     private void ApplySpeed() {
@@ -68,6 +72,10 @@ public class Hand : MonoBehaviour {
         return distanceBetweenHandAndShoulder >= shoulderLimitDistance;
     }
 
+    private void HoldSurfaceIfCapable() {
+        if(!isHolding && isPreparedToHold && currentCollisions.Count > 0) Hold(); 
+    }
+
     public void PrepareHold(bool enable) {
         isPreparedToHold = enable;
     }
@@ -95,9 +103,10 @@ public class Hand : MonoBehaviour {
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
-        if(isHolding) return;
-        if(!isPreparedToHold) return;
+        currentCollisions.Add(collision);
+    }
 
-        Hold();
+    void OnCollisionExit2D(Collision2D collision) {
+        currentCollisions.Remove(currentCollisions.Last());
     }
 }

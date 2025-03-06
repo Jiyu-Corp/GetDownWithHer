@@ -41,7 +41,7 @@ public class PlayerInputController : MonoBehaviour {
         holdHandR.canceled += ctx => climberEntity.ManageHoldHand(R_HAND, false);
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         UpdatePlayerDirectionPointer();
     }
 
