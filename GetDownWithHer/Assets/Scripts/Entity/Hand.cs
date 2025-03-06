@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 public class Hand : MonoBehaviour {
     public float handSpeed = 20f;
 
-    private bool isHolding = false;
+    public bool isHolding = false;
     private bool isPreparedToHold = false;
 
     private ClimberEntity climberEntity;
@@ -72,6 +72,11 @@ public class Hand : MonoBehaviour {
 
     public void StopHold() {
         isHolding = false;
+
+        rb.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
+        rb.constraints &= ~RigidbodyConstraints2D.FreezePositionY;
+
+        climberEntity.ManageHandsJoints(false);
     }
 
     public void Hold() {
@@ -79,7 +84,12 @@ public class Hand : MonoBehaviour {
 
         rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
         rb.constraints |= RigidbodyConstraints2D.FreezeRotation;
-        dj.enabled = true;
+        
+        climberEntity.ManageHandsJoints(true);
+    }
+    
+    public void ManageJoint(bool enable) {
+        dj.enabled = enable;
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
