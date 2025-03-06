@@ -566,38 +566,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PoorPlayer
       objectReference: {fileID: 0}
-    - target: {fileID: 2648806089508581307, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.004
-      objectReference: {fileID: 0}
-    - target: {fileID: 2648806089508581307, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.557
-      objectReference: {fileID: 0}
-    - target: {fileID: 2732223057246565390, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_Distance
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3544729814356230245, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_Color.b
-      value: 0.0047169924
-      objectReference: {fileID: 0}
-    - target: {fileID: 3544729814356230245, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_Color.g
-      value: 0.9400804
-      objectReference: {fileID: 0}
-    - target: {fileID: 3544729814356230245, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4405693181941993524, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 411596176}
-    - target: {fileID: 7544422313273570465, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_Distance
-      value: 1.1
-      objectReference: {fileID: 0}
     - target: {fileID: 8429389957818307554, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -637,14 +609,6 @@ PrefabInstance:
     - target: {fileID: 8429389957818307554, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8725446966875837852, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.063
-      objectReference: {fileID: 0}
-    - target: {fileID: 8725446966875837852, guid: 84029568cd0edde4e8fbc5ef90245a5b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.533
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
