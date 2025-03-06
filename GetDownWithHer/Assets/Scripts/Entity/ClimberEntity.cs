@@ -4,6 +4,8 @@ using System;
 using System.Threading.Tasks;
 
 public class ClimberEntity : Entity {
+    public Vector2 directionPointer;
+
     GameObject lHand;
     //GameObject rHand;
 
@@ -24,11 +26,15 @@ public class ClimberEntity : Entity {
         //Physics2D.IgnoreCollision(lHandCollider, rHandCollider);
     }
 
-    public void MoveHands(Vector2 position) {
-        Hand lHandScript = lHand.GetComponent<Hand>();
-        //Hand rHandScript = rHand.GetComponent<Hand>();
-
-        lHandScript.MoveHandToPosition(position);
-        //rHandScript.MoveHandToPosition(position);
+    public void SetDirectionPointer(Vector2 directionPointer) {
+        this.directionPointer = directionPointer;
     }
+
+    // public void MoveHands(Vector2 position) {
+    //     Hand lHandScript = lHand.GetComponent<Hand>();
+    //     //Hand rHandScript = rHand.GetComponent<Hand>();
+
+    //     lHandScript.MoveHandToPosition(position);
+    //     //rHandScript.MoveHandToPosition(position);
+    // }
 }

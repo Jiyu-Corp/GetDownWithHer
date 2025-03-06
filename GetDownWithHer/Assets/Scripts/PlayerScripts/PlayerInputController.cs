@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerInputController : MonoBehaviour {
+    public Camera mainCamera;
+
     private PlayerInput playerInput;
     private ClimberEntity climberEntity;
 
@@ -28,6 +30,6 @@ public class PlayerInputController : MonoBehaviour {
         jumpAction.performed += ctx => climberEntity.Jump();
         moveAction.started += ctx => climberEntity.StartMove(ctx.ReadValue<Vector2>().x);
         moveAction.canceled += ctx => climberEntity.StopMove();
-        moveHandsAction.performed += ctx => climberEntity.MoveHands(ctx.ReadValue<Vector2>());
+        moveHandsAction.performed += ctx => climberEntity.SetDirectionPointer(mainCamera.ScreenToWorldPoint(ctx.ReadValue<Vector2>()));
     } 
 }

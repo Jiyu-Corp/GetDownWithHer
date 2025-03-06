@@ -11,14 +11,17 @@ public class Hand : MonoBehaviour {
     private ClimberEntity climberEntity;
     private Rigidbody2D rb;
     private DistanceJoint2D dj;
+    private Rigidbody2D parentRB;
 
-    private float shoulderLimitDistance = 1f;
-    private Vector2 directionPointer; // Where mouse is, maybe should be on another script? Maybe Climb?
+    private readonly float shoulderLimitDistance = 1f;
 
     void Start() {
         rb = GetComponent<Rigidbody2D>();
         climberEntity = GetComponentInParent<ClimberEntity>();
         dj = GetComponent<DistanceJoint2D>();
+        parentRB = climberEntity.GetComponent<Rigidbody2D>();
+
+        dj.enabled = false;
     }
 
     void FixedUpdate() {
@@ -27,43 +30,40 @@ public class Hand : MonoBehaviour {
 
     private void ApplySpeed() {
         Vector2 speed;
+        Vector2 handPositionInWorldSpace = new Vector2(rb.transform.position.x, rb.transform.position.y);
 
-        Vector2 speedTowardsPointer = Vector2.MoveTowards(rb.position, directionPointer, handSpeed * Time.deltaTime);
+        Vector2 vectorTowardsPointer = climberEntity.directionPointer - handPositionInWorldSpace;
+        Vector2 speedTowardsPointer = (vectorTowardsPointer.magnitude > 0.05) ? vectorTowardsPointer.normalized * handSpeed : new Vector2(0,0);
 
         if(!isHolding) {
-            Rigidbody2D parentRB = climberEntity.GetComponent<Rigidbody2D>();
             speed = parentRB.linearVelocity;
 
-            if(IsHandOnShoulderLimit()) {
-                Vector2 shoulderJointPoint = dj.connectedAnchor;
-                Vector2 vectorFromHandToShoulder = shoulderJointPoint - rb.position;
-                float distanceToShoulderLimit = vectorFromHandToShoulder.magnitude - shoulderLimitDistance;
-                Vector2 vectorToShoulderLimit = vectorFromHandToShoulder.normalized * distanceToShoulderLimit;
-                Vector2 pointOfShoulderLimit = rb.position + vectorToShoulderLimit;
-
-                Vector2 velocityToApproachLimit = Vector2.MoveTowards(rb.position, pointOfShoulderLimit, Mathf.Infinity * Time.fixedDeltaTime);
-                speed += velocityToApproachLimit;
-            } 
+            speedTowardsPointer = AdjustSpeedToPointWithShoulderVirtualJoint(handPositionInWorldSpace, speedTowardsPointer);
             
             speed += speedTowardsPointer;
-        } else {
-            speed = speedTowardsPointer;
-        }
+        } else speed = speedTowardsPointer;
 
         rb.linearVelocity = speed;
     }
 
-    public void MoveHandToPosition(Vector2 position) {
-        return;
-        // if(isHolding) return;
+    private Vector2 AdjustSpeedToPointWithShoulderVirtualJoint(Vector2 handPosition, Vector2 originalSpeed) {
+        Vector2 shoulderJointPointInWorldSpace = dj.connectedAnchor + parentRB.position;
+        Vector2 nVectorFromHandToShoulder = (shoulderJointPointInWorldSpace - handPosition).normalized;
+        float projectionLength =  Vector2.Dot(originalSpeed, nVectorFromHandToShoulder);
+        if(IsHandOnShoulderLimit(handPosition) && projectionLength < 0) {
+            Vector2 projectionFromHandToShoulderOnPointerSpeed = projectionLength * nVectorFromHandToShoulder;
+            Vector2 limitedSpeed = originalSpeed - projectionFromHandToShoulderOnPointerSpeed;
 
-        // // proper validate if Distance Joint will pull the binded object
+            return limitedSpeed;
+        }
 
-        // Vector2 direction = position - rb.position;
-        // Debug.Log(direction);
-        // Vector2 velocityOfMovement = Vector2.MoveTowards(rb.linearVelocity, direction.normalized * handSpeed, handSpeed * Time.deltaTime);
+        return originalSpeed;
+    }
 
-        // rb.linearVelocity = velocityOfMovement;
+    private bool IsHandOnShoulderLimit(Vector2 handPosition) {
+        Vector2 shoulderJointPoint = dj.connectedAnchor + parentRB.position;
+        float distanceBetweenHandAndShoulder = Vector2.Distance(shoulderJointPoint, handPosition);
+        return distanceBetweenHandAndShoulder >= shoulderLimitDistance;
     }
 
     public void PrepareHold(bool enable) {
@@ -79,6 +79,7 @@ public class Hand : MonoBehaviour {
 
         rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
         rb.constraints |= RigidbodyConstraints2D.FreezeRotation;
+        dj.enabled = true;
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
