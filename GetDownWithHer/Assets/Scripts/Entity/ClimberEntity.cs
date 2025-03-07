@@ -4,7 +4,14 @@ using System;
 using System.Threading.Tasks;
 
 public class ClimberEntity : Entity {
+    [Header("Stamina Settings")]
+    public const float MAX_STAMINA = 100f;
+    public const float STAMINA_OFFSET_PER_SECOND = 10f;
+    public const float STAMINA_LOSE_VALUE_CAUSE_STRUCTURE_HOLD = 5f;
+
     public readonly float handSpeed = 5f;
+
+    private float stamina = MAX_STAMINA;
 
     private const int ID_L_HAND = 0;
     private const int ID_R_HAND = 1;
@@ -29,6 +36,30 @@ public class ClimberEntity : Entity {
         AdjustBodyColliders();
     }
 
+    protected override void FixedUpdate() {
+        base.FixedUpdate();
+
+        ManageStamina();
+        if(stamina <= 0) DisableClimb();
+    }
+
+    private void ManageStamina() {
+        float staminaOffset = STAMINA_OFFSET_PER_SECOND * Time.fixedDeltaTime * (isClimbing ? -1 : 1);
+        
+        stamina += staminaOffset;
+
+        if(stamina < 0) stamina = 0;
+    }
+
+    private void DisableClimb() {
+        ManageHoldHand(ID_L_HAND, false);
+        ManageHoldHand(ID_R_HAND, false);
+    }
+
+    private void DecreaseStaminaCauseStructureHold() {
+        stamina -= STAMINA_LOSE_VALUE_CAUSE_STRUCTURE_HOLD;
+    }
+
     private void AdjustBodyColliders() {
         Collider2D collider = GetComponent<Collider2D>();
         Collider2D lHandCollider = lHand.GetComponent<Collider2D>();
@@ -46,6 +77,8 @@ public class ClimberEntity : Entity {
     public void ManageHandsJoints(bool enableRequestFromHand) {
         bool enableHandsJoints = enableRequestFromHand || lHandScript.isHolding || rHandScript.isHolding;
         
+        if(enableRequestFromHand) DecreaseStaminaCauseStructureHold();
+
         lHandScript.ManageJoint(enableHandsJoints);
         rHandScript.ManageJoint(enableHandsJoints);
 

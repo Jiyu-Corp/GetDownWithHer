@@ -19,7 +19,7 @@ public class Entity : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    protected void FixedUpdate() {
+    protected virtual void FixedUpdate() {
         PlayerMove();
     }
 
