@@ -2,6 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Entity : MonoBehaviour {
+    [Header("HP Settings")]
+    public const float MAX_HP = 100f;
+    public const float HP_HEAL_PER_SECOND = 5f;
+    public const float MIN_FALL_SPEED_TO_DAMAGE = 10f;
+    public const float DAMAGE_PER_FALL_SPEED_PER_SECOND = 10f;
+
+    private float hp = MAX_HP;
+
     [Header("Movement Settings")]
     public float moveSpeed = 7f;
     public float jumpForce = 7f;
@@ -15,12 +23,29 @@ public class Entity : MonoBehaviour {
     // Terrain states
     private bool inGround = false;
 
+    private float speedFallOfTheLastUpd = 0f;
+
     protected virtual void Awake() {
         rb = GetComponent<Rigidbody2D>();
     }
 
     protected virtual void FixedUpdate() {
         PlayerMove();
+        StoreSpeedFall();
+        HealHp();
+    }
+
+    private void HealHp() {
+        bool isHpHealNeeded = hp < 100;
+        if(!isHpHealNeeded) return;
+
+        hp += HP_HEAL_PER_SECOND * Time.fixedDeltaTime;
+    }
+
+    private void StoreSpeedFall() {
+        speedFallOfTheLastUpd = inGround
+            ?   0
+            :   -rb.linearVelocityY;
     }
 
     private void PlayerMove() {
@@ -46,6 +71,19 @@ public class Entity : MonoBehaviour {
         horizontalMoveDirection += direction * (addDirection ? 1 : -1);
     }
 
+    public float GetHp() {
+        return hp;
+    }
+
+    private void CalculateFallDamage() {
+        Debug.Log(speedFallOfTheLastUpd);
+        if(speedFallOfTheLastUpd < MIN_FALL_SPEED_TO_DAMAGE) return;
+
+        float hpToLose = speedFallOfTheLastUpd * DAMAGE_PER_FALL_SPEED_PER_SECOND;
+
+        hp -= hpToLose;
+    }
+
     protected void ValidateAndUpdateTerrainStates() {
         float minYNormalForInGroundCheck = 0.3f;
         
@@ -64,6 +102,7 @@ public class Entity : MonoBehaviour {
         }
 
         ValidateAndUpdateTerrainStates();
+        if(inGround) CalculateFallDamage();
     }
     protected virtual void OnCollisionExit2D(Collision2D collision) {
         currentCollidingNormals.Remove(collision.collider);

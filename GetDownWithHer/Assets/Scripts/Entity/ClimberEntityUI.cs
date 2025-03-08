@@ -14,9 +14,11 @@ public class ClimberEntityUI : MonoBehaviour {
         staminaUI.text = Mathf.FloorToInt(climberEntity.GetStamina()).ToString();
         
         hpUI = canvasTransform.Find("HP").GetComponent<Text>();
+        hpUI.text = Mathf.FloorToInt(climberEntity.GetHp()).ToString();
     }
 
     void Update() {
         staminaUI.text = Mathf.FloorToInt(climberEntity.GetStamina()).ToString();
+        hpUI.text = Mathf.FloorToInt(climberEntity.GetHp()).ToString();
     }
 }

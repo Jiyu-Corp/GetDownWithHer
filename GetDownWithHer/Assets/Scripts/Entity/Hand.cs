@@ -50,8 +50,6 @@ public class Hand : MonoBehaviour {
         } else speed = speedTowardsPointer;
 
         rb.linearVelocity = speed;
-        Debug.Log("debug");
-        Debug.Log(rb.linearVelocity);
     }
 
     private Vector2 AdjustSpeedToPointWithShoulderVirtualJoint(Vector2 handPosition, Vector2 originalSpeed) {
