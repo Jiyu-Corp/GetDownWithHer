@@ -43,12 +43,17 @@ public class ClimberEntity : Entity {
         if(stamina <= 0) DisableClimb();
     }
 
+    public float GetStamina() {
+        return stamina;
+    }
+
     private void ManageStamina() {
+        bool isStaminaOffsetNeeded = isClimbing && stamina > 0 || !isClimbing && stamina < 100;
+        if(!isStaminaOffsetNeeded) return;
+
         float staminaOffset = STAMINA_OFFSET_PER_SECOND * Time.fixedDeltaTime * (isClimbing ? -1 : 1);
         
         stamina += staminaOffset;
-
-        if(stamina < 0) stamina = 0;
     }
 
     private void DisableClimb() {
