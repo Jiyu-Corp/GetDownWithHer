@@ -15,6 +15,7 @@ public class Entity : MonoBehaviour {
     public float jumpForce = 7f;
 
     protected Rigidbody2D rb;
+    protected Collider2D cld;
 
     private float horizontalMoveDirection = 0f;
 
@@ -27,6 +28,7 @@ public class Entity : MonoBehaviour {
 
     protected virtual void Awake() {
         rb = GetComponent<Rigidbody2D>();
+        cld = GetComponent<Collider2D>();
     }
 
     protected virtual void FixedUpdate() {
@@ -35,7 +37,7 @@ public class Entity : MonoBehaviour {
         HealHp();
     }
 
-    private void HealHp() {
+    protected virtual void HealHp() {
         bool isHpHealNeeded = hp < 100;
         if(!isHpHealNeeded) return;
 
