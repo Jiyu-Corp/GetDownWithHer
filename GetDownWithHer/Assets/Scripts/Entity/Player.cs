@@ -1,14 +1,33 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : ClimberEntity {
+    [Header("Catch Princess Settings")]
+    public const float COOLDOWN_TO_CATCH_PRINCESS = 5f;
+
+    private bool isCatchPrincessOnCooldown = false;
+    private float currentCooldownToCatchPrincess = COOLDOWN_TO_CATCH_PRINCESS;
     private bool havePrincess = true;
 
-    private void LoseGame() {
-        RestartScene();
+    [SerializeField]
+    protected Collider2D princessCollider;
+
+    protected override void FixedUpdate() {
+        base.FixedUpdate();
+
+        if(isCatchPrincessOnCooldown) ManageCatchPrincessCooldown();
     }
-    private void RestartScene() {
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.name);
+
+    private void ManageCatchPrincessCooldown() {
+        currentCooldownToCatchPrincess -= Time.fixedDeltaTime;
+
+        if(currentCooldownToCatchPrincess <= 0) {
+            isCatchPrincessOnCooldown = false;
+
+            Physics2D.IgnoreCollision(lHandCollider, princessCollider, false);
+            Physics2D.IgnoreCollision(rHandCollider, princessCollider, false);
+            Physics2D.IgnoreCollision(cld, princessCollider, false);
+        }
     }
 
     private void CatchPrincess(GameObject princessObj) {
@@ -16,16 +35,35 @@ public class Player : ClimberEntity {
         princessObj.transform.SetParent(transform);
 
         // Temporary princess catch design
-        Vector2 parentSize = cld.bounds.size;
-        princessObj.transform.localPosition = new Vector2(-parentSize.x/2 + 2, parentSize.y/2 - 2);
-        princessObj.transform.Rotate(0f, 0f, 45f);
+        princessObj.transform.localPosition = new Vector2(-0.41f, 0.42f);
+        princessObj.transform.localRotation = Quaternion.Euler(0f, 0f, 123.33f);
 
         havePrincess = true;
         princessScript.GetCaught();
     }
 
     public void LosePrincessReaction() {
+        isCatchPrincessOnCooldown = true;
+        currentCooldownToCatchPrincess = COOLDOWN_TO_CATCH_PRINCESS;
         havePrincess = false;
+
+        Physics2D.IgnoreCollision(lHandCollider, princessCollider);
+        Physics2D.IgnoreCollision(rHandCollider, princessCollider);
+        Physics2D.IgnoreCollision(cld, princessCollider);
+    }
+
+    protected override void Die() {
+        base.Die();
+
+        LoseGame();
+    }
+
+    private void LoseGame() {
+        RestartScene();
+    }
+    private void RestartScene() {
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision) {

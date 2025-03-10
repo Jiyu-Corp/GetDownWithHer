@@ -1,12 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Princess : Entity {
-    public const float MAX_HP = 50f;
-
     [Header("Escape Settings")]
-    public const float COOLDOWN_TO_ESCAPE_IN_SECONDS = 120f;
+    public const float COOLDOWN_TO_ESCAPE_IN_SECONDS = 20f;
 
-    private readonly Transform DEFAULT_PARENT = transform.root;
+    private Transform defaultParent;
 
     [SerializeField]
     private Player player;
@@ -14,11 +13,21 @@ public class Princess : Entity {
     private float currentCooldownToEscape = COOLDOWN_TO_ESCAPE_IN_SECONDS;
     private bool isCaptured = true;
 
+    protected override void Awake() {
+        base.Awake();
+
+        defaultParent = transform.root;
+    }
+
     protected override void FixedUpdate() {
+        base.FixedUpdate();
+
         if(isCaptured) TryEscape();
     }
 
-    protected override void HealHp() {};
+    protected override void HealHp() {
+        if (true) base.HealHp();
+    }
 
     private void TryEscape() {
         currentCooldownToEscape -= Time.fixedDeltaTime;
@@ -30,9 +39,7 @@ public class Princess : Entity {
     }
 
     private void Escape() {
-        transform.localPosition = new Vector2(transform.localPosition.x-2, transform.localPosition.y);
-
-        transform.SetParent(DEFAULT_PARENT);
+        transform.SetParent(defaultParent);
         ManageGameObjectPhysics(true);
         
         isCaptured = false;
@@ -46,9 +53,15 @@ public class Princess : Entity {
         currentCooldownToEscape = COOLDOWN_TO_ESCAPE_IN_SECONDS;
     }
 
-    private void ManageGameObjectPhysics(enable) {
+    private void ManageGameObjectPhysics(bool enable) {
         rb.simulated = enable;
         cld.enabled = enable;
+    }
+
+    protected override void Die() {
+        base.Die();
+
+        EndGame();
     }
 
     // We need to refactor the end/restart game logic cause the player and princess have it, code duplication... We must put it on a common place for both

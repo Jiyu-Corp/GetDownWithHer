@@ -5,7 +5,7 @@ public class Entity : MonoBehaviour {
     [Header("HP Settings")]
     public const float MAX_HP = 100f;
     public const float HP_HEAL_PER_SECOND = 5f;
-    public const float MIN_FALL_SPEED_TO_DAMAGE = 10f;
+    public const float MIN_SPEED_FALL_TO_DAMAGE = 10f;
     public const float DAMAGE_PER_FALL_SPEED_PER_SECOND = 10f;
 
     private float hp = MAX_HP;
@@ -24,7 +24,7 @@ public class Entity : MonoBehaviour {
     // Terrain states
     private bool inGround = false;
 
-    private float speedFallOfTheLastUpd = 0f;
+    private float fallSpeedOfTheLastUpd = 0f;
 
     protected virtual void Awake() {
         rb = GetComponent<Rigidbody2D>();
@@ -33,7 +33,7 @@ public class Entity : MonoBehaviour {
 
     protected virtual void FixedUpdate() {
         PlayerMove();
-        StoreSpeedFall();
+        StoreFallSpeed();
         HealHp();
     }
 
@@ -44,8 +44,8 @@ public class Entity : MonoBehaviour {
         hp += HP_HEAL_PER_SECOND * Time.fixedDeltaTime;
     }
 
-    private void StoreSpeedFall() {
-        speedFallOfTheLastUpd = inGround
+    private void StoreFallSpeed() {
+        fallSpeedOfTheLastUpd = inGround
             ?   0
             :   -rb.linearVelocityY;
     }
@@ -78,13 +78,15 @@ public class Entity : MonoBehaviour {
     }
 
     private void CalculateFallDamage() {
-        Debug.Log(speedFallOfTheLastUpd);
-        if(speedFallOfTheLastUpd < MIN_FALL_SPEED_TO_DAMAGE) return;
+        if(fallSpeedOfTheLastUpd < MIN_SPEED_FALL_TO_DAMAGE) return;
 
-        float hpToLose = speedFallOfTheLastUpd * DAMAGE_PER_FALL_SPEED_PER_SECOND;
+        float hpToLose = fallSpeedOfTheLastUpd * DAMAGE_PER_FALL_SPEED_PER_SECOND;
 
         hp -= hpToLose;
+        if(hp <= 0) Die();
     }
+
+    protected virtual void Die() {}
 
     protected void ValidateAndUpdateTerrainStates() {
         float minYNormalForInGroundCheck = 0.3f;

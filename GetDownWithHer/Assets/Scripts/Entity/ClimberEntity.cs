@@ -19,10 +19,12 @@ public class ClimberEntity : Entity {
     [HideInInspector]
     public Vector2 directionPointer;
 
-    GameObject lHand;
-    Hand lHandScript;
-    GameObject rHand;
-    Hand rHandScript;
+    protected GameObject lHand;
+    protected Hand lHandScript;
+    protected Collider2D lHandCollider;
+    protected GameObject rHand;
+    protected Hand rHandScript;
+    protected Collider2D rHandCollider;
 
     [HideInInspector]
     public bool isClimbing = false;
@@ -30,8 +32,11 @@ public class ClimberEntity : Entity {
     void Start() {
         lHand = transform.Find("LeftHand").gameObject;
         lHandScript = lHand.GetComponent<Hand>();
+        lHandCollider = lHand.GetComponent<Collider2D>();
+        
         rHand = transform.Find("RightHand").gameObject;
         rHandScript = rHand.GetComponent<Hand>();
+        rHandCollider = rHand.GetComponent<Collider2D>();
 
         AdjustBodyColliders();
     }
@@ -66,12 +71,8 @@ public class ClimberEntity : Entity {
     }
 
     private void AdjustBodyColliders() {
-        Collider2D collider = GetComponent<Collider2D>();
-        Collider2D lHandCollider = lHand.GetComponent<Collider2D>();
-        Collider2D rHandCollider = rHand.GetComponent<Collider2D>();
-
-        Physics2D.IgnoreCollision(collider, lHandCollider);
-        Physics2D.IgnoreCollision(collider, rHandCollider);
+        Physics2D.IgnoreCollision(cld, lHandCollider);
+        Physics2D.IgnoreCollision(cld, rHandCollider);
         Physics2D.IgnoreCollision(lHandCollider, rHandCollider);
     }
 
