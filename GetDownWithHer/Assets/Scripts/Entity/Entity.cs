@@ -22,7 +22,7 @@ public class Entity : MonoBehaviour {
     private Dictionary<Collider2D, Vector2> currentCollidingNormals = new Dictionary<Collider2D, Vector2>();
 
     // Terrain states
-    private bool inGround = false;
+    protected bool inGround = false;
 
     private float fallSpeedOfTheLastUpd = 0f;
 

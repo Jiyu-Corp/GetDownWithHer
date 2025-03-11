@@ -9,13 +9,21 @@ public class Player : ClimberEntity {
     private float currentCooldownToCatchPrincess = COOLDOWN_TO_CATCH_PRINCESS;
     private bool havePrincess = true;
 
+    [Header("Annoy Princess Settings")]
+    public const float TIME_NEEDED_TO_DELAY_PRINCESS_WITH_ANNOY_IN_SECONDS = 4f;
+
+    private float startAnnoyPrincessCallTime = 0f;
+
     [SerializeField]
     protected Collider2D princessCollider;
+    [SerializeField]
+    protected Princess princessScript;
 
     protected override void FixedUpdate() {
         base.FixedUpdate();
 
         if(isCatchPrincessOnCooldown) ManageCatchPrincessCooldown();
+        if(startAnnoyPrincessCallTime != 0) AnnoyPrincess();
     }
 
     private void ManageCatchPrincessCooldown() {
@@ -30,8 +38,12 @@ public class Player : ClimberEntity {
         }
     }
 
+    public bool IsAnnoyingPrincess() {
+        bool isAnnoyingPrincess = startAnnoyPrincessCallTime != 0;
+        return isAnnoyingPrincess;
+    }
+
     private void CatchPrincess(GameObject princessObj) {
-        Princess princessScript = princessObj.GetComponent<Princess>();
         princessObj.transform.SetParent(transform);
 
         // Temporary princess catch design
@@ -50,6 +62,26 @@ public class Player : ClimberEntity {
         Physics2D.IgnoreCollision(lHandCollider, princessCollider);
         Physics2D.IgnoreCollision(rHandCollider, princessCollider);
         Physics2D.IgnoreCollision(cld, princessCollider);
+    }
+
+    private void AnnoyPrincess() {
+        if(Mathf.Abs(rb.linearVelocity.x) > 1 || Mathf.Abs(rb.linearVelocity.y) > 1) StopAnnoyPrincess();
+
+        if(Time.time - startAnnoyPrincessCallTime >= TIME_NEEDED_TO_DELAY_PRINCESS_WITH_ANNOY_IN_SECONDS) princessScript.DelayAnnoyingly();
+    }
+
+    public void StartAnnoyPrincess() {
+        if(!inGround) return;
+
+        startAnnoyPrincessCallTime = Time.time;
+    }
+
+    public void StopAnnoyPrincess() {
+        startAnnoyPrincessCallTime = 0f;
+    }
+
+    public float GetCurrentCooldownToPrincessEscape() {
+        return princessScript.GetCurrentCooldownToEscape();
     }
 
     protected override void Die() {

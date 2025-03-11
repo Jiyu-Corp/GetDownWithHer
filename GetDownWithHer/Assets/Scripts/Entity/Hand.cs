@@ -13,13 +13,18 @@ public class Hand : MonoBehaviour {
     private ClimberEntity climberEntity;
     private Rigidbody2D rb;
     private DistanceJoint2D dj;
+    private Collider2D cld;
     private Rigidbody2D parentRB;
 
     private List<Collision2D> currentCollisions = new();
     private float shoulderLimitDistance;
 
+    [SerializeField]
+    private Collider2D knightCollider;
+
     void Start() {
         rb = GetComponent<Rigidbody2D>();
+        cld = GetComponent<Collider2D>();
         climberEntity = GetComponentInParent<ClimberEntity>();
         dj = GetComponent<DistanceJoint2D>();
         parentRB = climberEntity.GetComponent<Rigidbody2D>();
@@ -27,6 +32,12 @@ public class Hand : MonoBehaviour {
         shoulderLimitDistance = dj.distance;
 
         dj.enabled = false;
+
+        ConfigureIgnoreKnightCollision();
+    }
+
+    private void ConfigureIgnoreKnightCollision() {
+        Physics2D.IgnoreCollision(cld, knightCollider);
     }
 
     void FixedUpdate() {

@@ -30,6 +30,8 @@ public class Princess : Entity {
     }
 
     private void TryEscape() {
+        if(player.IsAnnoyingPrincess()) return;
+        
         currentCooldownToEscape -= Time.fixedDeltaTime;
 
         bool canEscape = currentCooldownToEscape <= 0;
@@ -56,6 +58,14 @@ public class Princess : Entity {
     private void ManageGameObjectPhysics(bool enable) {
         rb.simulated = enable;
         cld.enabled = enable;
+    }
+
+    public float GetCurrentCooldownToEscape() {
+        return currentCooldownToEscape;
+    }
+
+    public void DelayAnnoyingly() {
+        currentCooldownToEscape = COOLDOWN_TO_ESCAPE_IN_SECONDS;
     }
 
     protected override void Die() {

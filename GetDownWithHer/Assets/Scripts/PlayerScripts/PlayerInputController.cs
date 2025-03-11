@@ -12,8 +12,9 @@ public class PlayerInputController : MonoBehaviour {
     //private InputAction moveAction; This was removed cause multiple bind call to same action was returning wrong value, on the canceled event
     private InputAction moveRightAction;
     private InputAction moveLeftAction;
-    private InputAction holdHandL;
-    private InputAction holdHandR;
+    private InputAction holdHandLAction;
+    private InputAction holdHandRAction;
+    private InputAction annoyPrincessAction;
 
     private void Awake() {
         playerInput = GetComponent<PlayerInput>();
@@ -30,8 +31,9 @@ public class PlayerInputController : MonoBehaviour {
         //moveAction = playerInput.actions["Move"];
         moveRightAction = playerInput.actions["MoveRight"];
         moveLeftAction = playerInput.actions["MoveLeft"];
-        holdHandL = playerInput.actions["HoldHandL"];
-        holdHandR = playerInput.actions["HoldHandR"];
+        holdHandLAction = playerInput.actions["HoldHandL"];
+        holdHandRAction = playerInput.actions["HoldHandR"];
+        annoyPrincessAction = playerInput.actions["AnnoyPrincess"];
     }
 
     private void BindHandlersToActions() {
@@ -45,10 +47,16 @@ public class PlayerInputController : MonoBehaviour {
         if(cEntity != null) {
             const int L_HAND = 0;
             const int R_HAND = 1;
-            holdHandL.started += ctx => cEntity.ManageHoldHand(L_HAND, true);
-            holdHandL.canceled += ctx => cEntity.ManageHoldHand(L_HAND, false);
-            holdHandR.started += ctx => cEntity.ManageHoldHand(R_HAND, true);
-            holdHandR.canceled += ctx => cEntity.ManageHoldHand(R_HAND, false);
+            holdHandLAction.started += ctx => cEntity.ManageHoldHand(L_HAND, true);
+            holdHandLAction.canceled += ctx => cEntity.ManageHoldHand(L_HAND, false);
+            holdHandRAction.started += ctx => cEntity.ManageHoldHand(R_HAND, true);
+            holdHandRAction.canceled += ctx => cEntity.ManageHoldHand(R_HAND, false);
+        }
+
+        Player player = entity as Player;
+        if(player != null) {
+            annoyPrincessAction.started += ctx => player.StartAnnoyPrincess();
+            annoyPrincessAction.canceled += ctx => player.StopAnnoyPrincess();
         }
     }
 
