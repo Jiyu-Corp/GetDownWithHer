@@ -33,7 +33,7 @@ public class NavigationGraphGenerator : MonoBehaviour
     public int samplesPerCollider = 3; // Sample points per collider
 
     [Header("Connection Settings")]
-    public float maxDirectConnectionDistance = 10f;
+    public float maxDirectConnectionDistance = 5f;
     public float maxJumpHorizontalDistance = 3f;
     public float maxJumpVerticalDifference = 2f;
     public float maxDirectVerticalDifference = 0.5f;
@@ -85,6 +85,7 @@ public class NavigationGraphGenerator : MonoBehaviour
                 Node b = graph.nodes[j];
                 if (IsDirectlyConnected(a, b))
                 {
+                    Debug.Log("It is directly connected" + a.position + " and " + b.position);
                     a.neighbors.Add(b);
                     b.neighbors.Add(a);
                 }
@@ -116,17 +117,11 @@ public class NavigationGraphGenerator : MonoBehaviour
         return true;
     }
 
-    bool IsObstructed(Vector2 start, Vector2 end)
-    {
-        // Cast a line between start and end on your ground/wall layer(s).
-        RaycastHit2D hit = Physics2D.Linecast(start, end, wallLayerMask);
-
-        // If hit.collider is not null, it means there's something in between (a wall, etc.)
-        return (hit.collider != null);
-    }
-
     bool IsJumpFeasible(Node a, Node b)
     {
+        if (IsObstructed(a.position, b.position))
+            return false;
+
         float horizontalDistance = Mathf.Abs(a.position.x - b.position.x);
         float verticalDifference = b.position.y - a.position.y; // positive if b is above a
         if (horizontalDistance > maxJumpHorizontalDistance)
@@ -134,6 +129,15 @@ public class NavigationGraphGenerator : MonoBehaviour
         if (verticalDifference > maxJumpVerticalDifference)
             return false;
         return true;
+    }
+
+    bool IsObstructed(Vector2 start, Vector2 end)
+    {
+        // Cast a line between start and end on your ground/wall layer(s).
+        RaycastHit2D hit = Physics2D.Linecast(start, end, wallLayerMask);
+
+        // If hit.collider is not null, it means there's something in between (a wall, etc.)
+        return hit.collider != null;
     }
 
     void OnDrawGizmos()
