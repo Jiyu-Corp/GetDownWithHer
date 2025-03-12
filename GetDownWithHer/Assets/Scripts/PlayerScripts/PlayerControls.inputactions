@@ -6,18 +6,54 @@
             "id": "b17b0dff-9f81-4b24-b5db-24286d6938c8",
             "actions": [
                 {
-                    "name": "Move",
-                    "type": "Value",
+                    "name": "MoveRight",
+                    "type": "Button",
                     "id": "d3e4692d-ac9f-4ed9-b264-f9bb9b5045d0",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": true
                 },
                 {
                     "name": "Jump",
                     "type": "Button",
                     "id": "d5a18880-aa90-4d20-8669-21cb36eabbab",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "HoldHandL",
+                    "type": "Button",
+                    "id": "8c8f5fb2-b2d7-479c-897f-de929c4a0855",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "HoldHandR",
+                    "type": "Button",
+                    "id": "008aeb88-f55e-4de8-a849-0f0e29e51a7c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveLeft",
+                    "type": "Button",
+                    "id": "69cb9284-f8cf-4aec-aacd-87ad213167aa",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AnnoyPrincess",
+                    "type": "Button",
+                    "id": "a6965708-cf36-401f-823d-0b9d9f0f3448",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -37,37 +73,59 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Horizontal",
-                    "id": "e8cfc283-d3eb-4d15-a512-cc8761d9dc1b",
-                    "path": "2DVector",
+                    "name": "",
+                    "id": "b7d78f9a-b384-45d8-b874-194e47d20d57",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
+                    "action": "HoldHandL",
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "left",
-                    "id": "7f8bed8e-55d7-4086-93db-a797c25b3704",
-                    "path": "<Keyboard>/a",
+                    "name": "",
+                    "id": "00a01227-631d-4c66-9c08-6f25cf62e33a",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "HoldHandR",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "right",
-                    "id": "7762fecf-aa69-471c-8b6b-ae1a99ecbec3",
+                    "name": "",
+                    "id": "9e07e752-388d-4c24-b24b-4b094cc4e687",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "MoveRight",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "560eec93-8219-4e2e-9114-820a1bd1b250",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b5da87c3-4cb3-41bb-a5bc-9d1caa7bfe8f",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AnnoyPrincess",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

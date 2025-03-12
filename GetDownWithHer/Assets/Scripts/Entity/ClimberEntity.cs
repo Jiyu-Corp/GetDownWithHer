@@ -4,137 +4,99 @@ using System;
 using System.Threading.Tasks;
 
 public class ClimberEntity : Entity {
-    private int stamina = 100;
-    private bool isStaminaDraining = false;
-    private int staminaDrainScale = 0;
+    [Header("Stamina Settings")]
+    public const float MAX_STAMINA = 100f;
+    public const float STAMINA_OFFSET_PER_SECOND = 10f;
+    public const float STAMINA_LOSE_VALUE_CAUSE_STRUCTURE_HOLD = 5f;
 
-    public float climbSpeed = 3f;
+    public readonly float handSpeed = 5f;
 
-    private bool canClimb = false;
-    private bool isClimbing = false;
+    private float stamina = MAX_STAMINA;
 
-    private bool isGeneratingRandomNextClimbStep = false;
-    private ClimbStep? nextClimbStep = null;
+    private const int ID_L_HAND = 0;
+    private const int ID_R_HAND = 1;
 
-    protected async void Start() {
-        await StartAutoStaminaRegenPerSecond();
-    }
+    [HideInInspector]
+    public Vector2 directionPointer;
 
-    private async Task StartAutoStaminaRegenPerSecond() {
-        while(true) {
-            if(isStaminaDraining) continue;
+    protected GameObject lHand;
+    protected Hand lHandScript;
+    protected Collider2D lHandCollider;
+    protected GameObject rHand;
+    protected Hand rHandScript;
+    protected Collider2D rHandCollider;
 
-            int delay = 1 * 1000;
-            await Task.Delay(delay);
-            
-            stamina++;
-        }
-    }
+    [HideInInspector]
+    public bool isClimbing = false;
 
-    public void StartClimb() {
-        if(!canClimb) return;
-
-        isClimbing = true;
-        rb.gravityScale = 0f;
-        rb.linearVelocity = Vector2.zero;
-        StartGeneratingRandomNextClimbStep();
-        StartStaminaDrainPerSecond();
-    }
-
-    public void StopClimb() {
-        if(!isClimbing) return;
+    void Start() {
+        lHand = transform.Find("LeftHand").gameObject;
+        lHandScript = lHand.GetComponent<Hand>();
+        lHandCollider = lHand.GetComponent<Collider2D>();
         
-        isClimbing = false;
-        rb.gravityScale = 1f;
-        StopGeneratingRandomNextClimbStep();
-        StopStaminaDrainPerSecond();
+        rHand = transform.Find("RightHand").gameObject;
+        rHandScript = rHand.GetComponent<Hand>();
+        rHandCollider = rHand.GetComponent<Collider2D>();
+
+        AdjustBodyColliders();
     }
 
-    public ClimbStep? GetNextClimbStep() {
-        return nextClimbStep;
+    protected override void FixedUpdate() {
+        base.FixedUpdate();
+
+        ManageStamina();
+        if(stamina <= 0) DisableClimb();
     }
 
-    public ClimbStep? VerifyAndResetNextClimbStep(ClimbStep inputedClimbStep) {
-        ClimbStep? correctClimbStep = nextClimbStep;
-        if(correctClimbStep == null) return null;
-
-        if(correctClimbStep == inputedClimbStep) {
-            staminaDrainScale--;
-        } else {
-            staminaDrainScale*=2;
-        }
-
-        if(stamina <= 0) StopClimb();
-
-        nextClimbStep = null;
-
-        return correctClimbStep;
+    public float GetStamina() {
+        return stamina;
     }
 
-    private async void StartGeneratingRandomNextClimbStep(int minDelay = 1000, int maxDelay = 3000) {
-        isGeneratingRandomNextClimbStep = true;
-        while(isGeneratingRandomNextClimbStep) {
-            int delay = UnityEngine.Random.Range(minDelay, maxDelay);
-            await Task.Delay(delay);
-            if (!isGeneratingRandomNextClimbStep) return;
+    private void ManageStamina() {
+        bool isStaminaOffsetNeeded = isClimbing && stamina > 0 || !isClimbing && stamina < 100;
+        if(!isStaminaOffsetNeeded) return;
 
-            nextClimbStep = GenerateRandomNextClimbStep();
-        }
-    }
-
-    private void StopGeneratingRandomNextClimbStep() {
-        isGeneratingRandomNextClimbStep = false;
-    }
-
-    private ClimbStep GenerateRandomNextClimbStep() {
-        Array enumValues = Enum.GetValues(typeof(ClimbStep));
+        float staminaOffset = STAMINA_OFFSET_PER_SECOND * Time.fixedDeltaTime * (isClimbing ? -1 : 1);
         
-        ClimbStep randomStep = (ClimbStep)enumValues.GetValue(UnityEngine.Random.Range(0, enumValues.Length));
+        stamina += staminaOffset;
+    }
+
+    private void DisableClimb() {
+        ManageHoldHand(ID_L_HAND, false);
+        ManageHoldHand(ID_R_HAND, false);
+    }
+
+    private void DecreaseStaminaCauseStructureHold() {
+        stamina -= STAMINA_LOSE_VALUE_CAUSE_STRUCTURE_HOLD;
+    }
+
+    private void AdjustBodyColliders() {
+        Physics2D.IgnoreCollision(cld, lHandCollider);
+        Physics2D.IgnoreCollision(cld, rHandCollider);
+        Physics2D.IgnoreCollision(lHandCollider, rHandCollider);
+    }
+
+    public void SetDirectionPointer(Vector2 directionPointer) {
+        this.directionPointer = directionPointer;
+    }
+
+    public void ManageHandsJoints(bool enableRequestFromHand) {
+        bool enableHandsJoints = enableRequestFromHand || lHandScript.isHolding || rHandScript.isHolding;
         
-        return randomStep;
+        if(enableRequestFromHand) DecreaseStaminaCauseStructureHold();
+
+        lHandScript.ManageJoint(enableHandsJoints);
+        rHandScript.ManageJoint(enableHandsJoints);
+
+        isClimbing = enableHandsJoints;
     }
+    public void ManageHoldHand(int idHand, bool enable) {
+        Hand handSelected = idHand == ID_L_HAND
+            ?   lHandScript
+            :   rHandScript;
 
-    private async void StartStaminaDrainPerSecond() {
-        isStaminaDraining = true;
-        while(isStaminaDraining) {
-            int delay = 1 * 1000;
-            await Task.Delay(delay);
-            
-            staminaDrainScale++;
-            stamina = stamina - staminaDrainScale;
-        }
+
+        handSelected.PrepareHold(enable);
+        if(!enable && handSelected.isHolding) handSelected.StopHold();
     }
-
-    private void StopStaminaDrainPerSecond() {
-        isStaminaDraining = false;
-    }
-
-    /// <summary>
-    /// Climb up or down based on the direction param, need to be on isClimbing state
-    /// </summary>
-    /// <param name="verticalDirection">Value between -1 and 1.</param>
-    public void Climb(float verticalDirection) {
-        if(!isClimbing) return;
-
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, verticalDirection * climbSpeed); 
-    }
-
-    protected override void OnCollisionEnter2D(Collision2D collision) {
-        base.OnCollisionEnter2D(collision);
-
-        bool isCollisionClimbable = collision.gameObject.CompareTag("Climbable"); 
-        if (isCollisionClimbable) {
-            canClimb = true;
-        }
-    }
-
-    protected override void OnCollisionExit2D(Collision2D collision) {
-        base.OnCollisionExit2D(collision);
-
-        bool isCollisionClimbable = collision.gameObject.CompareTag("Climbable"); 
-        if (isCollisionClimbable) {
-            canClimb = false;
-        }
-    }
-
 }
