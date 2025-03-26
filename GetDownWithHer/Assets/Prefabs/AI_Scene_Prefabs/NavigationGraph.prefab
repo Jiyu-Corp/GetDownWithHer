@@ -52,10 +52,10 @@ MonoBehaviour:
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  samplesPerCollider: 3
-  maxDirectConnectionDistance: 10
+  samplesPerCollider: 5
+  maxDirectConnectionDistance: 5
   maxJumpHorizontalDistance: 3
-  maxJumpVerticalDifference: 2
+  maxJumpVerticalDifference: 3
   maxDirectVerticalDifference: 0.5
   drawNodes: 1
   drawConnections: 1

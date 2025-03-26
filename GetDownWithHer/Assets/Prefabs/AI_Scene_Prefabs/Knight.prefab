@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4102910465226494541}
   - component: {fileID: 3340739103754378090}
-  - component: {fileID: 8464760933316294496}
+  - component: {fileID: 534092707121573875}
   - component: {fileID: 3564748736182540120}
   - component: {fileID: 476360982384998542}
   m_Layer: 0
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
-  m_Color: {r: 1, g: 0.14448223, b: 0, a: 1}
+  m_Color: {r: 0.9528302, g: 0.31011927, b: 0.31011927, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -90,7 +90,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &8464760933316294496
+--- !u!50 &534092707121573875
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -106,16 +106,16 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 449ea81dc3621fa40a9167981051a4f5, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &3564748736182540120
 BoxCollider2D:
@@ -182,5 +182,5 @@ MonoBehaviour:
   princess: {fileID: 0}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
-  recalcThreshold: 1.5
+    m_Bits: 8
+  recalcThreshold: 3

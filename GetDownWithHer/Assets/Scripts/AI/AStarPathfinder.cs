@@ -51,7 +51,7 @@ public class AStarPathfinder
                 fScore[neighbor] = gScore[neighbor] + Heuristic(neighbor, targetNode);
             }
         }
-        return null; // No path found.
+        return null; 
     }
 
     static float Heuristic(Node a, Node b)

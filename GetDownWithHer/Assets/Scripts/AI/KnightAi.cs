@@ -92,7 +92,6 @@ public class KnightAi : MonoBehaviour
         // Set horizontal velocity while preserving the current vertical velocity.
         rb.linearVelocity = new Vector2(directionX * speed, rb.linearVelocity.y);
 
-
         if (ShouldJump(target))
         {
             Jump();
@@ -108,6 +107,7 @@ public class KnightAi : MonoBehaviour
                 return TaskStatus.Success;
             }
         }
+
         return TaskStatus.Continue;
     }
 
@@ -115,21 +115,8 @@ public class KnightAi : MonoBehaviour
     {
         // Only consider jumping if the target is above our current position.
         if (target.y <= transform.position.y) return false;
-        
-        // Determine movement direction (assumes right is positive x).
-        float directionX = Mathf.Sign(target.x - transform.position.x);
-        
-        // Define a point ahead of the knight's feet.
-        Vector2 rayOrigin = new Vector2(transform.position.x + directionX * 0.5f, transform.position.y);
-        
-        // The raycast length can be tuned based on your game scale.
-        float rayDistance = 1.0f;
-        
-        // Cast a ray downward from this point.
-        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, rayDistance, groundLayer);
-        
-        // If no ground is detected, there’s a gap.
-        return hit.collider == null;
+                
+        return true;
     }
 
     void Jump()

@@ -196,7 +196,7 @@ Transform:
   m_GameObject: {fileID: 59760633}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.76, y: -2.06, z: 0}
+  m_LocalPosition: {x: -9.77, y: -1.72, z: 0}
   m_LocalScale: {x: 2.0593734, y: 0.61109, z: 0.61109}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1732,11 +1732,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4102910465226494541, guid: a3987243a0c7a3045ae0dd88e5c78eb1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.81
+      value: 6.94
       objectReference: {fileID: 0}
     - target: {fileID: 4102910465226494541, guid: a3987243a0c7a3045ae0dd88e5c78eb1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.9
+      value: -3.89
       objectReference: {fileID: 0}
     - target: {fileID: 4102910465226494541, guid: a3987243a0c7a3045ae0dd88e5c78eb1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3195,7 +3195,7 @@ Transform:
   m_GameObject: {fileID: 1894718923}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -13.04, y: -3.49, z: 0}
+  m_LocalPosition: {x: -13.25, y: -2.36, z: 0}
   m_LocalScale: {x: 2.0593734, y: 0.61109, z: 0.61109}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3651,7 +3651,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4758230545209784548, guid: 8cf49eef51b47fe439253a20c73bee42, type: 3}
       propertyPath: samplesPerCollider
-      value: 50
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758230545209784548, guid: 8cf49eef51b47fe439253a20c73bee42, type: 3}
+      propertyPath: maxJumpHorizontalDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758230545209784548, guid: 8cf49eef51b47fe439253a20c73bee42, type: 3}
+      propertyPath: maxJumpVerticalDifference
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4758230545209784548, guid: 8cf49eef51b47fe439253a20c73bee42, type: 3}
       propertyPath: maxDirectConnectionDistance

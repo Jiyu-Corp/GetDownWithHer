@@ -30,7 +30,7 @@ public class NavigationGraphGenerator : MonoBehaviour
     [Header("Ground Settings")]
     public LayerMask groundLayerMask;
     public LayerMask wallLayerMask;
-    public int samplesPerCollider = 3; // Sample points per collider
+    public int samplesPerCollider = 3;
 
     [Header("Connection Settings")]
     public float maxDirectConnectionDistance = 5f;
@@ -68,10 +68,19 @@ public class NavigationGraphGenerator : MonoBehaviour
                 Vector2 samplePoint = new(sampleX, bounds.max.y);
 
                 // Verify the sample point is over ground
-                RaycastHit2D hit = Physics2D.Raycast(samplePoint + Vector2.up * 0.1f, Vector2.down, 1f, groundLayerMask);
+                RaycastHit2D hit = Physics2D.Raycast(
+                    samplePoint + Vector2.up * 0.1f, // start from a small offset above
+                    Vector2.down, 
+                    2f, 
+                    groundLayerMask
+                );
+
                 if (hit.collider != null)
                 {
-                    graph.nodes.Add(new Node(samplePoint));
+                    // Place the node a little above the surface so linecasts won't collide
+                    float nodeVerticalOffset = 0.05f;
+                    Vector2 nodePos = hit.point + Vector2.up * nodeVerticalOffset;
+                    graph.nodes.Add(new Node(nodePos));
                 }
             }
         }
@@ -85,7 +94,6 @@ public class NavigationGraphGenerator : MonoBehaviour
                 Node b = graph.nodes[j];
                 if (IsDirectlyConnected(a, b))
                 {
-                    Debug.Log("It is directly connected" + a.position + " and " + b.position);
                     a.neighbors.Add(b);
                     b.neighbors.Add(a);
                 }
@@ -97,7 +105,6 @@ public class NavigationGraphGenerator : MonoBehaviour
             }
         }
 
-        Debug.Log("Navigation graph generated with " + graph.nodes.Count + " nodes.");
     }
 
     bool IsDirectlyConnected(Node a, Node b)
@@ -105,15 +112,12 @@ public class NavigationGraphGenerator : MonoBehaviour
         float distance = Vector2.Distance(a.position, b.position);
         float verticalDiff = Mathf.Abs(a.position.y - b.position.y);
 
-        // Basic range checks
         if (distance > maxDirectConnectionDistance || verticalDiff > maxDirectVerticalDifference)
             return false;
 
-        // Check for obstacles between the two nodes
         if (IsObstructed(a.position, b.position))
             return false;
 
-        // If we get here, there's no wall in between, so we can consider them connected.
         return true;
     }
 
@@ -123,20 +127,19 @@ public class NavigationGraphGenerator : MonoBehaviour
             return false;
 
         float horizontalDistance = Mathf.Abs(a.position.x - b.position.x);
-        float verticalDifference = b.position.y - a.position.y; // positive if b is above a
+        float verticalDifference = b.position.y - a.position.y;
+        Debug.Log("positions:" + a.position + "" + b.position + " Horizontal distance: " + horizontalDistance + " Vertical difference: " + verticalDifference);
         if (horizontalDistance > maxJumpHorizontalDistance)
             return false;
-        if (verticalDifference > maxJumpVerticalDifference)
+        if (verticalDifference > maxJumpVerticalDifference || verticalDifference < -2.5f)
             return false;
         return true;
     }
 
     bool IsObstructed(Vector2 start, Vector2 end)
     {
-        // Cast a line between start and end on your ground/wall layer(s).
-        RaycastHit2D hit = Physics2D.Linecast(start, end, wallLayerMask);
-
-        // If hit.collider is not null, it means there's something in between (a wall, etc.)
+        LayerMask combinedMask = wallLayerMask | groundLayerMask;
+        RaycastHit2D hit = Physics2D.Linecast(start, end, combinedMask);
         return hit.collider != null;
     }
 
