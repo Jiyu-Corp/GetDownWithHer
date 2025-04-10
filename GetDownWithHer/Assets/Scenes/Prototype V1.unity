@@ -3651,15 +3651,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4758230545209784548, guid: 8cf49eef51b47fe439253a20c73bee42, type: 3}
       propertyPath: samplesPerCollider
-      value: 25
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4758230545209784548, guid: 8cf49eef51b47fe439253a20c73bee42, type: 3}
       propertyPath: maxJumpHorizontalDistance
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4758230545209784548, guid: 8cf49eef51b47fe439253a20c73bee42, type: 3}
       propertyPath: maxJumpVerticalDifference
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4758230545209784548, guid: 8cf49eef51b47fe439253a20c73bee42, type: 3}
       propertyPath: maxDirectConnectionDistance
