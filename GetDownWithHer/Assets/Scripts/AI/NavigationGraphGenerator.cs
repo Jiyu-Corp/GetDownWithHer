@@ -128,7 +128,7 @@ public class NavigationGraphGenerator : MonoBehaviour
 
         float horizontalDistance = Mathf.Abs(a.position.x - b.position.x);
         float verticalDifference = b.position.y - a.position.y;
-        Debug.Log("positions:" + a.position + "" + b.position + " Horizontal distance: " + horizontalDistance + " Vertical difference: " + verticalDifference);
+        
         if (horizontalDistance > maxJumpHorizontalDistance)
             return false;
         if (verticalDifference > maxJumpVerticalDifference || verticalDifference < -2.5f)
